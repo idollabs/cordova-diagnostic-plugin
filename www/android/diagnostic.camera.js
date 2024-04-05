@@ -29,22 +29,25 @@ var Diagnostic_Camera = (function(){
      ********************/
 
     function mapFromLegacyCameraApi() {
-        var params;
-        if (typeof arguments[0]  === "function") {
-            params = (arguments.length > 2 && typeof arguments[2]  === "object") ? arguments[2] : {};
-            params.successCallback = arguments[0];
-            if(arguments.length > 1 && typeof arguments[1]  === "function") {
+        var params = arguments[0] || {}; // Initialize with an empty object if not provided
+        // Check if the first argument is a function (success callback)
+        if (typeof params.successCallback === "function") {
+            // Check if there's an error callback function
+            if (typeof params.errorCallback === "function") {
                 params.errorCallback = arguments[1];
             }
-            if(arguments.length > 2 && arguments[2]  === false) {
+            // Check if the third argument is false (storage)
+            if (arguments.length > 2 && arguments[2] === false) {
                 params.storage = arguments[2];
             }
-        }else { // if (typeof arguments[0]  === "object")
-            params = arguments[0];
         }
-        if(!params || !params?.storage) params['storage'] = true; // default to true
+        // Set default value for 'storage' if not explicitly defined
+        if (params.storage === undefined) {
+            params.storage = true; // Default to true
+        }
         return params;
     }
+
 
     function numberOfKeys(obj){
         var count = 0;
